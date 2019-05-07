@@ -396,6 +396,12 @@ namespace Sharbitrager
                 {
                     Console.WriteLine("Place bet of " + team1input.ToString("C", new CultureInfo("en-GB")) + " @ " + team1odds + " on Team 1");
                     Console.WriteLine("Place bet of " + team2input.ToString("C", new CultureInfo("en-GB")) + " @ " + team2odds + " on Team 2");
+                    dataGridView1.Invoke((MethodInvoker)delegate {
+                        dataGridView1.Rows.Add(betpage.ToString(), profit.ToString("C", new CultureInfo("en-GB")), team1input.ToString("C", new CultureInfo("en-GB")), team2input.ToString("C", new CultureInfo("en-GB")), " ");
+                    });
+
+                        
+                        
 
                 }
                 else
@@ -404,6 +410,7 @@ namespace Sharbitrager
                     Console.WriteLine("Place bet of " + team1input.ToString("C", new CultureInfo("en-GB")) + " on Outcome 1");
                     Console.WriteLine("Place bet of " + team2input.ToString("C", new CultureInfo("en-GB")) + " on Outcome 2");
                     Console.WriteLine("Place bet of " + team3input.ToString("C", new CultureInfo("en-GB")) + " on Outcome 3");
+                    dataGridView1.Rows.Add(betpage.ToString(), profit.ToString("C", new CultureInfo("en-GB")), team1input.ToString("C", new CultureInfo("en-GB")), team2input.ToString("C", new CultureInfo("en-GB")), team3input.ToString("C", new CultureInfo("en-GB")));
 
                 }
             }
