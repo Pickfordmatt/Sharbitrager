@@ -18,6 +18,7 @@ namespace Sharbitrager
     {
         private List<string> pageurls = new List<string>();
         private List<string> foundpages = new List<string>();
+        private List<string> foundbetpages = new List<string>();
         private double team1, team2, team3;
         private string team1odds, team2odds, team3odds;
         public Form1()
@@ -144,69 +145,18 @@ namespace Sharbitrager
             //Team2
             var oddslNodes3 = oddsDoc.DocumentNode.SelectNodes("//*[@id='t1']/tr[3]/td");
             //Team1 Get Odds
-            try
+            if (foundbetpages.Contains(betpage))
             {
-                var foundodds = 0;
-
-                foreach (var oddsnode in oddslNodes)
+            }
+            else
+            {
+                try
                 {
+                    var foundodds = 0;
 
-                    var input = oddsnode.OuterHtml;
-                    var searchTerm = "b";
-                    var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
-                    var result = Regex.IsMatch(input, pattern); // returns false
-                    if (result && foundodds == 0)
+                    foreach (var oddsnode in oddslNodes)
                     {
 
-                        foundodds++;
-                        if (oddsnode.InnerText.Contains("/"))
-                        {
-                            try
-                            {
-                                team1odds = oddsnode.InnerText;
-                                string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
-                                string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
-                                int beforeint = 0;
-                                Int32.TryParse(before, out beforeint);
-                                int afterint = 0;
-                                Int32.TryParse(after, out afterint);
-                                team1 = (double)beforeint / (double)afterint + 1;
-
-
-                            }
-
-                            catch { }
-                        }
-
-                        else
-                        {
-                            team1odds = oddsnode.InnerText;
-                            int single = 0;
-                            Int32.TryParse(oddsnode.InnerText, out single);
-                            team1 = (double)single / 1 + 1;
-
-                        }
-
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-            //Team2 Get Odds
-            try
-            {
-                team3odds = "0";
-                team3 = 0;
-                var foundodds = 0;
-                var foundodds2 = 0;
-                //2 Outcome Game
-                if (oddslNodes3 == null)
-                {
-
-                    foreach (var oddsnode in oddslNodes2)
-                    {
                         var input = oddsnode.OuterHtml;
                         var searchTerm = "b";
                         var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
@@ -219,14 +169,15 @@ namespace Sharbitrager
                             {
                                 try
                                 {
-                                    team2odds = oddsnode.InnerText;
+                                    team1odds = oddsnode.InnerText;
                                     string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
                                     string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
                                     int beforeint = 0;
                                     Int32.TryParse(before, out beforeint);
                                     int afterint = 0;
                                     Int32.TryParse(after, out afterint);
-                                    team2 = (double)beforeint / (double)afterint + 1;
+                                    team1 = (double)beforeint / (double)afterint + 1;
+
 
                                 }
 
@@ -235,124 +186,179 @@ namespace Sharbitrager
 
                             else
                             {
-                                //Console.WriteLine(oddsnode.InnerText);
-                                team2odds = oddsnode.InnerText;
+                                team1odds = oddsnode.InnerText;
                                 int single = 0;
                                 Int32.TryParse(oddsnode.InnerText, out single);
-                                team2 = (double)single / 1 + 1;
+                                team1 = (double)single / 1 + 1;
 
                             }
 
                         }
                     }
                 }
-                //3 Outcome Game
-                else
+                catch
                 {
 
-                    foreach (var oddsnode in oddslNodes3)
+                }
+                //Team2 Get Odds
+                try
+                {
+                    team3odds = "0";
+                    team3 = 0;
+                    var foundodds = 0;
+                    var foundodds2 = 0;
+                    //2 Outcome Game
+                    if (oddslNodes3 == null)
                     {
-                        var input = oddsnode.OuterHtml;
-                        var searchTerm = "b";
-                        var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
-                        var result = Regex.IsMatch(input, pattern); // returns false
-                        if (result && foundodds == 0)
+
+                        foreach (var oddsnode in oddslNodes2)
                         {
-
-
-                            if (oddsnode.InnerText.Contains("/"))
+                            var input = oddsnode.OuterHtml;
+                            var searchTerm = "b";
+                            var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
+                            var result = Regex.IsMatch(input, pattern); // returns false
+                            if (result && foundodds == 0)
                             {
-                                try
+
+                                foundodds++;
+                                if (oddsnode.InnerText.Contains("/"))
+                                {
+                                    try
+                                    {
+                                        team2odds = oddsnode.InnerText;
+                                        string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
+                                        string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
+                                        int beforeint = 0;
+                                        Int32.TryParse(before, out beforeint);
+                                        int afterint = 0;
+                                        Int32.TryParse(after, out afterint);
+                                        team2 = (double)beforeint / (double)afterint + 1;
+
+                                    }
+
+                                    catch { }
+                                }
+
+                                else
+                                {
+                                    //Console.WriteLine(oddsnode.InnerText);
+                                    team2odds = oddsnode.InnerText;
+                                    int single = 0;
+                                    Int32.TryParse(oddsnode.InnerText, out single);
+                                    team2 = (double)single / 1 + 1;
+
+                                }
+
+                            }
+                        }
+                    }
+                    //3 Outcome Game
+                    else
+                    {
+
+                        foreach (var oddsnode in oddslNodes3)
+                        {
+                            var input = oddsnode.OuterHtml;
+                            var searchTerm = "b";
+                            var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
+                            var result = Regex.IsMatch(input, pattern); // returns false
+                            if (result && foundodds == 0)
+                            {
+
+
+                                if (oddsnode.InnerText.Contains("/"))
+                                {
+                                    try
+                                    {
+                                        team2odds = oddsnode.InnerText;
+                                        string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
+                                        string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
+                                        int beforeint = 0;
+                                        Int32.TryParse(before, out beforeint);
+                                        int afterint = 0;
+                                        Int32.TryParse(after, out afterint);
+                                        team2 = (double)beforeint / (double)afterint + 1;
+                                        foundodds++;
+
+                                    }
+
+                                    catch { }
+                                }
+
+                                else
                                 {
                                     team2odds = oddsnode.InnerText;
-                                    string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
-                                    string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
-                                    int beforeint = 0;
-                                    Int32.TryParse(before, out beforeint);
-                                    int afterint = 0;
-                                    Int32.TryParse(after, out afterint);
-                                    team2 = (double)beforeint / (double)afterint + 1;
+                                    //Console.WriteLine(oddsnode.InnerText);
+                                    int single = 0;
+                                    Int32.TryParse(oddsnode.InnerText, out single);
+                                    team2 = (double)single / 1 + 1;
                                     foundodds++;
 
                                 }
 
-                                catch { }
                             }
-
-                            else
-                            {
-                                team2odds = oddsnode.InnerText;
-                                //Console.WriteLine(oddsnode.InnerText);
-                                int single = 0;
-                                Int32.TryParse(oddsnode.InnerText, out single);
-                                team2 = (double)single / 1 + 1;
-                                foundodds++;
-
-                            }
-
                         }
-                    }
 
-                    foreach (var oddsnode in oddslNodes2)
-                    {
-                        var input = oddsnode.OuterHtml;
-                        var searchTerm = "b";
-                        var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
-                        var result = Regex.IsMatch(input, pattern); // returns false
-                        if (result && foundodds2 == 0)
+                        foreach (var oddsnode in oddslNodes2)
                         {
-
-
-                            if (oddsnode.InnerText.Contains("/"))
+                            var input = oddsnode.OuterHtml;
+                            var searchTerm = "b";
+                            var pattern = @"\b" + Regex.Escape(searchTerm) + @"\b";
+                            var result = Regex.IsMatch(input, pattern); // returns false
+                            if (result && foundodds2 == 0)
                             {
-                                try
+
+
+                                if (oddsnode.InnerText.Contains("/"))
+                                {
+                                    try
+                                    {
+                                        team3odds = oddsnode.InnerText;
+                                        string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
+                                        string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
+                                        int beforeint = 0;
+                                        Int32.TryParse(before, out beforeint);
+                                        int afterint = 0;
+                                        Int32.TryParse(after, out afterint);
+                                        team3 = (double)beforeint / (double)afterint + 1;
+                                        foundodds2++;
+
+                                    }
+
+                                    catch { }
+                                }
+
+                                else
                                 {
                                     team3odds = oddsnode.InnerText;
-                                    string before = oddsnode.InnerText.Substring(0, oddsnode.InnerText.IndexOf('/') + 0);
-                                    string after = oddsnode.InnerText.Substring(oddsnode.InnerText.IndexOf('/') + 1);
-                                    int beforeint = 0;
-                                    Int32.TryParse(before, out beforeint);
-                                    int afterint = 0;
-                                    Int32.TryParse(after, out afterint);
-                                    team3 = (double)beforeint / (double)afterint + 1;
+                                    //Console.WriteLine(oddsnode.InnerText);
+                                    int single = 0;
+                                    Int32.TryParse(oddsnode.InnerText, out single);
+                                    team3 = (double)single / 1 + 1;
                                     foundodds2++;
 
                                 }
 
-                                catch { }
                             }
-
-                            else
-                            {
-                                team3odds = oddsnode.InnerText;
-                                //Console.WriteLine(oddsnode.InnerText);
-                                int single = 0;
-                                Int32.TryParse(oddsnode.InnerText, out single);
-                                team3 = (double)single / 1 + 1;
-                                foundodds2++;
-
-                            }
-
                         }
                     }
                 }
-            }
-            catch
-            {
+                catch
+                {
 
+                }
+                try
+                {
+                    Console.WriteLine(betpage + "         " + team1odds + "---" + team2odds + "---" + team3odds);
+                    FindArb(team1, team2, team3, betpage);
+                }
+                catch
+                {
+                    Console.WriteLine(betpage + "         " + team1odds + "---" + team2odds);
+                    team3 = 0;
+                    FindArb(team1, team2, team3, betpage);
+                }
             }
-            try
-            {
-                Console.WriteLine(betpage + "         " + team1odds + "---" + team2odds + "---" + team3odds);
-                FindArb(team1, team2, team3, betpage);
-            }
-            catch
-            {
-                Console.WriteLine(betpage + "         " + team1odds + "---" + team2odds);
-                team3 = 0;
-                FindArb(team1, team2, team3, betpage);
-            }
-
         }
 
         public void FindArb(double team1, double team2, double team3, string betpage)
